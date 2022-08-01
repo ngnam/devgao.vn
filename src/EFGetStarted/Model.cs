@@ -3,6 +3,7 @@
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
 
     public class BloggingContext : DbContext
     {
@@ -14,9 +15,11 @@
         public BloggingContext()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
-            var folder = Environment.SpecialFolder.ApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "blogging.db");
+            var folder = Path.GetDirectoryName(
+                Assembly.GetEntryAssembly().Location.Substring(0,
+                Assembly.GetEntryAssembly().Location.IndexOf("bin\\")));
+
+            DbPath = System.IO.Path.Join(folder, "db\\blogging.db");
         }
 
         // The following configures EF to create a Sqlite database file in the
